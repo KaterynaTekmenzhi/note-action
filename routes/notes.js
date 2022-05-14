@@ -1,7 +1,29 @@
 const router = require('express').Router();
-const { v4: uuidv4 } = require('uuid');
+const fs = require("fs");
+const { randomUUID } = require('crypto');
 
-// POST route for creating a new note
+// const { route } = require('.');
+
+// Method: GET
+// Route: api/notes
+// Action: get all notes
+router.get('/', (req, res) => {
+    // 
+    fs.readFile("./db/db.json", (err, data) => {
+        if (err) {
+             
+        console.log(err);
+        }
+        else {
+            res.json(JSON.parse(data));
+            console.log(JSON.parse(data));
+        }
+    });
+});
+
+// Method: POST
+// Route: api/notes
+// Action: create a new note
 router.post('/', (req, res) => {
     // Destructuring req.body
     const { title, text } = req.body;
@@ -12,17 +34,51 @@ router.post('/', (req, res) => {
         const note = {
             title,
             text,
-            note_id: uuidv4(),
+            note_id: randomUUID(),
         };
 
-        const response = {
-            status: 'success',
-            body: note,
-        };
-        res.json(response);
-    } else {
-        res.json('Missing required fields');
+        // Read the db.json file
+        fs.readFile("./db/db.json", (err, data) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                // Parse the data into an array
+                const notes = JSON.parse(data);
+
+                // Push the new note into the array
+                notes.push(note);
+
+                // Write the updated data to the db.json file
+                fs.writeFile("./db/db.json", JSON.stringify(notes, null, 4), (err) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                    else {
+                        const response = {
+                            status: "note created successfully",
+                            body: note,
+                        };
+
+                        console.log("Successfully created note");
+                        res.json(response);
+                    }
+                });
+            }
+        });
+    }
+    else {
+        res.error("Missing required fields");
     }
 });
 
 module.exports = router;
+
+    // const response = {
+    //         status: 'success',
+    //         body: note,
+    //     };
+    //     res.json(response);
+    // } else {
+    //     res.json('Missing required fields');
+    // }
