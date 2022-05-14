@@ -16,11 +16,11 @@ This application will use Express.js back end and will save and retrieve note da
 
 ## Screenshots
 
-![homepage](./assets/homepage.png)
+![homepage](./Assets/homepage.png)
 
-![newnote](./assets/newnote.png)
+![newnote](./Assets/newnote.png)
 
-![savednote](./assets/savednote.png)
+![savednote](./Assets/savednote.png)
 
 ## Installation
 
